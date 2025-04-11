@@ -1,57 +1,87 @@
-package dds.birbnb_ahk.entities;
+package dds.birbnb_ahk.entities.alojamientos;
+import dds.birbnb_ahk.entities.ubicaciones.Direccion;
+import dds.birbnb_ahk.entities.Moneda;
+import dds.birbnb_ahk.entities.reservas.RangoFechas;
+import dds.birbnb_ahk.entities.reservas.Reserva;
+import dds.birbnb_ahk.entities.usuarios.Usuario;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.catalog.Catalog;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-
+@Entity
+@Table
 public class Alojamiento {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     @Setter
     @Getter
+    @ManyToOne
     private Usuario anfitrion;
 
     @Setter
     @Getter
+    @Column(name = "nombre")
     private String nombre;
 
     @Setter
     @Getter
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Setter
     @Getter
+    @Column(name = "precioPorNoche")
     private Double precioPorNoche;
 
     @Setter
     @Getter
+
+    @Enumerated(EnumType.STRING)
     private Moneda moneda;
 
     @Setter
     @Getter
+    @Column(columnDefinition = "TIME")
     private LocalTime horarioChecking;
 
     @Setter
     @Getter
+    @Column(columnDefinition = "TIME")
     private LocalTime horarioCheckOut;
 
     @Setter
     @Getter
+    @OneToOne
+    @JoinColumn(nullable = false)
     private Direccion direccion;
 
     @Setter
     @Getter
+    @Column
     private Integer cantHuespedesMax;
 
     @Getter
+    @ElementCollection
+    @CollectionTable(name = "alojamiento_caracteristicas", joinColumns = @JoinColumn(name = "alojamiento_id"))
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "caracteristica")
     private List<Caracteristica> caracteristicas;
 
     @Getter
+    @OneToMany(mappedBy = "alojamiento")
     private List<Reserva> reservas;
 
     @Getter
+    @OneToMany
+    @JoinColumn(name = "alojamiento_id")
     private List<Foto> fotos;
 
     public Alojamiento(){
@@ -74,7 +104,7 @@ public class Alojamiento {
         }
         return !estaDisponible;
          */
-        return this.reservas.stream().noneMatch(r -> r.getRangoFechas().estasDisponible(rango))
+        return this.reservas.stream().noneMatch(r -> r.getRangoFechas().estasDisponible(rango));
     }
 
 

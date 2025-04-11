@@ -1,4 +1,6 @@
-package dds.birbnb_ahk.entities;
+package dds.birbnb_ahk.entities.notificaciones;
+import dds.birbnb_ahk.entities.reservas.EstadoReserva;
+import dds.birbnb_ahk.entities.reservas.Reserva;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +22,8 @@ public class FactoryNotificacion {
                 + " fue confirmada.";
             case CANCELADA -> "La reserva de " + reserva.getHuesped().getNombre()
                     + " para el alojamiento " + reserva.getAlojamiento().getNombre()
-                    + ", desde el dia " + reserva.getRangoFechas()
-        }
+                    + ", desde el dia " + reserva.getRangoFechas();
+        };
     }
 
     public Notificacion crearSegunReserva(Reserva reserva){
